@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TaxAI - Assistente Tributário Inteligente</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    .chat-message{animation:fadeIn .3s ease-in-out}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .tab-content{display:none}
+    .tab-content.active{display:block;animation:fadeIn .5s ease-in-out}
+    .progress-bar{transition:width .5s ease-in-out}
+    .suggestion-chip{cursor:pointer}
+    .fade-in{animation:fadeIn .3s ease-in-out}
+  </style>
+</head>
+<body class="bg-gray-50 font-sans">
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg">
+    <div class="container mx-auto px-4 py-6">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="flex items-center mb-4 md:mb-0">
+          <i class="fas fa-robot text-3xl mr-3"></i>
+          <h1 class="text-2xl md:text-3xl font-bold">Tax<span class="text-blue-200">AI</span></h1>
+        </div>
+        <nav class="flex space-x-1 md:space-x-4">
+          <button onclick="openTab('chat-tab', event)" class="tab-btn px-3 py-2 rounded-lg bg-blue-700 text-white font-medium transition hover:bg-blue-800">
+            <i class="fas fa-comments mr-2"></i>Chat
+          </button>
+          <button onclick="openTab('simulator-tab', event)" class="tab-btn px-3 py-2 rounded-lg hover:bg-blue-700 text-white font-medium transition">
+            <i class="fas fa-calculator mr-2"></i>Simulador
+          </button>
+          <button onclick="openTab('cnpj-tab', event)" class="tab-btn px-3 py-2 rounded-lg hover:bg-blue-700 text-white font-medium transition">
+            <i class="fas fa-building mr-2"></i>Analisador CNPJ
+          </button>
+          <button onclick="openTab('ncm-tab', event)" class="tab-btn px-3 py-2 rounded-lg hover:bg-blue-700 text-white font-medium transition">
+            <i class="fas fa-barcode mr-2"></i>Consulta NCM
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Voltar ao site -->
+  <div class="container mx-auto px-4 mt-4">
+    <a href="reforma.html" class="inline-flex items-center bg-white text-blue-600 px-4 py-2 rounded-lg shadow-md hover:bg-gray-100 transition font-medium">
+      <i class="fas fa-arrow-left mr-2"></i> Voltar ao Site
+    </a>
+  </div>
+
+  <main class="container mx-auto px-4 py-8">
+
+    <!-- Chat -->
+    <div id="chat-tab" class="tab-content active">
+      <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="p-4 bg-blue-600 text-white">
+          <h2 class="text-xl font-bold flex items-center">
+            <i class="fas fa-comments mr-2"></i> Chat Tributário Inteligente
+          </h2>
+          <p class="text-blue-100 text-sm">Tire suas dúvidas sobre a Reforma Tributária em linguagem simples</p>
+        </div>
+
+        <div id="chat-container" class="h-96 overflow-y-auto p-4 space-y-4 bg-gray-50">
+          <div class="chat-message flex">
+            <div class="flex-shrink-0 mr-3">
+              <div class="bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center">
+                <i class="fas fa-robot"></i>
+              </div>
+            </div>
+            <div class="bg-white p-3 rounded-lg shadow-sm max-w-xs md:max-w-md lg:max-w-lg">
+              <p class="text-gray-800">Olá! Sou o TaxAI, seu assistente virtual para questões sobre a Reforma Tributária. Como posso ajudar você hoje?</p>
+              <p class="text-xs text-gray-500 mt-1">10:15 AM</p>
+            </div>
+          </div>
+
+          <div class="chat-message flex justify-end">
+            <div class="bg-blue-600 text-white p-3 rounded-lg shadow-sm max-w-xs md:max-w-md lg:max-w-lg">
+              <p>Quais são as principais mudanças na Reforma Tributária para o setor de serviços?</p>
+              <p class="text-xs text-blue-100 mt-1">10:16 AM</p>
+            </div>
+          </div>
+
+          <div class="chat-message flex">
+            <div class="flex-shrink-0 mr-3">
+              <div class="bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center">
+                <i class="fas fa-robot"></i>
+              </div>
+            </div>
+            <div class="bg-white p-3 rounded-lg shadow-sm max-w-xs md:max-w-md lg:max-w-lg">
+              <p class="text-gray-800">A Reforma Tributária unifica vários impostos em um único tributo chamado IBS (Imposto sobre Bens e Serviços). Para o setor de serviços, as principais mudanças são:</p>
+              <ul class="list-disc pl-5 mt-2 text-gray-700">
+                <li class="mb-1">Alíquota média estimada entre 25-30%</li>
+                <li class="mb-1">Extinção do ISS municipal</li>
+                <li class="mb-1">Possibilidade de créditos fiscais entre bens e serviços</li>
+              </ul>
+              <p class="text-xs text-gray-500 mt-1">10:17 AM</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 border-t border-gray-200 bg-white">
+          <div class="flex">
+            <input id="chat-input" type="text" placeholder="Digite sua dúvida sobre a Reforma Tributária..." class="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+            <button onclick="sendMessage()" class="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700 transition">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+          <div class="mt-2 text-xs text-gray-500">
+            <p>As respostas são baseadas na legislação atual e materiais oficiais da Receita Federal.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
+          <h3 class="font-bold text-lg mb-2 text-blue-800"><i class="fas fa-lightbulb mr-2"></i> Perguntas Frequentes</h3>
+          <ul class="space-y-2">
+            <li><button onclick="insertQuestion(this)" class="text-left text-blue-600 hover:text-blue-800">Como calcular o novo IBS?</button></li>
+            <li><button onclick="insertQuestion(this)" class="text-left text-blue-600 hover:text-blue-800">Quais setores serão mais impactados?</button></li>
+            <li><button onclick="insertQuestion(this)" class="text-left text-blue-600 hover:text-blue-800">Quando entra em vigor a Reforma?</button></li>
+          </ul>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
+          <h3 class="font-bold text-lg mb-2 text-green-800"><i class="fas fa-book mr-2"></i> Materiais de Apoio</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-green-600 hover:text-green-800">Texto completo da Reforma</a></li>
+            <li><a href="#" class="text-green-600 hover:text-green-800">Guia prático para empresas</a></li>
+            <li><a href="#" class="text-green-600 hover:text-green-800">Comparativo de alíquotas</a></li>
+          </ul>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-purple-500">
+          <h3 class="font-bold text-lg mb-2 text-purple-800"><i class="fas fa-chart-line mr-2"></i> Dados Estatísticos</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-purple-600 hover:text-purple-800">Impacto por setor econômico</a></li>
+            <li><a href="#" class="text-purple-600 hover:text-purple-800">Projeções de arrecadação</a></li>
+            <li><a href="#" class="text-purple-600 hover:text-purple-800">Comparativo internacional</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Simulador -->
+    <div id="simulator-tab" class="tab-content">
+      <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="p-4 bg-green-600 text-white">
+          <h2 class="text-xl font-bold flex items-center"><i class="fas fa-calculator mr-2"></i> Simulador Tributário</h2>
+          <p class="text-green-100 text-sm">Compare como sua empresa será impactada pela Reforma Tributária</p>
+        </div>
+
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h3 class="font-bold text-lg mb-4 text-gray-800 border-b pb-2">Dados da Empresa</h3>
+              <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Regime Tributário Atual</label>
+                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                  <option>Simples Nacional</option><option>Lucro Presumido</option><option>Lucro Real</option>
+                </select>
+              </div>
+              <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Setor de Atuação</label>
+                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                  <option>Comércio</option><option>Indústria</option><option>Serviços</option><option>Agropecuária</option>
+                </select>
+              </div>
+              <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Faturamento Mensal (R$)</label>
+                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Ex: 50000">
+              </div>
+              <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Estado</label>
+                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                  <option>SP - São Paulo</option><option>RJ - Rio de Janeiro</option><option>MG - Minas Gerais</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg mb-4 text-gray-800 border-b pb-2">Detalhes Adicionais</h3>
+              <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Possui operações interestaduais?</label>
+                <div class="flex space-x-4">
+                  <label class="inline-flex items-center"><input type="radio" name="interestadual" checked class="text-green-600"><span class="ml-2">Sim</span></label>
+                  <label class="inline-flex items-center"><input type="radio" name="interestadual" class="text-green-600"><span class="ml-2">Não</span></label>
+                </div>
+              </div>
+              <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Percentual de vendas para consumidor final</label>
+                <input type="range" min="0" max="100" value="70" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                <div class="flex justify-between text-xs text-gray-500"><span>0%</span><span>50%</span><span>100%</span></div>
+              </div>
+              <div class="mb-4">
+                <label class="block text-gray-700 mb-2">CNAEs Principais (separados por vírgula)</label>
+                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Ex: 6201-5, 6204-0">
+              </div>
+            </div>
+          </div>
+          <div class="mt-6 flex justify-center">
+            <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition flex items-center">
+              <i class="fas fa-calculator mr-2"></i> Simular Impacto Tributário
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultados do Simulador (demo) -->
+      <div id="simulator-results" class="mt-8 hidden">
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="p-4 bg-blue-600 text-white">
+            <h2 class="text-xl font-bold flex items-center"><i class="fas fa-chart-pie mr-2"></i> Resultado da Simulação</h2>
+          </div>
+          <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h3 class="font-bold text-lg mb-4 text-gray-800 border-b pb-2">Situação Atual</h3>
+                <div class="space-y-4">
+                  <div><p class="text-gray-600">Total de Impostos Mensais</p><p class="text-2xl font-bold text-blue-600">R$ 12.450,00</p></div>
+                  <div>
+                    <p class="text-gray-600">Alíquota Efetiva</p>
+                    <div class="flex items-center"><div class="w-full bg-gray-200 rounded-full h-4"><div class="bg-blue-500 h-4 rounded-full" style="width: 24.9%"></div></div><span class="ml-2 font-bold text-blue-600">24,9%</span></div>
+                  </div>
+                  <div>
+                    <p class="text-gray-600">Impostos Pagos</p>
+                    <ul class="space-y-2">
+                      <li class="flex justify-between"><span>ICMS</span><span class="font-medium">R$ 6.200,00</span></li>
+                      <li class="flex justify-between"><span>PIS/COFINS</span><span class="font-medium">R$ 3.150,00</span></li>
+                      <li class="flex justify-between"><span>ISS</span><span class="font-medium">R$ 1.800,00</span></li>
+                      <li class="flex justify-between"><span>Outros</span><span class="font-medium">R$ 1.300,00</span></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg mb-4 text-gray-800 border-b pb-2">Após a Reforma Tributária</h3>
+                <div class="space-y-4">
+                  <div>
+                    <p class="text-gray-600">Total de Impostos Mensais</p>
+                    <p class="text-2xl font-bold text-green-600">R$ 10.875,00</p>
+                    <p class="text-sm text-green-600"><i class="fas fa-arrow-down mr-1"></i> 12,7% de redução</p>
+                  </div>
+                  <div>
+                    <p class="text-gray-600">Alíquota Efetiva (IBS)</p>
+                    <div class="flex items-center"><div class="w-full bg-gray-200 rounded-full h-4"><div class="bg-green-500 h-4 rounded-full" style="width: 21.75%"></div></div><span class="ml-2 font-bold text-green-600">21,75%</span></div>
+                  </div>
+                  <div>
+                    <p class="text-gray-600">Benefícios Estimados</p>
+                    <ul class="space-y-2">
+                      <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i><span>Redução de burocracia fiscal</span></li>
+                      <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i><span>Crédito fiscal integral</span></li>
+                      <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i><span>Extinção de 5 tributos</span></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8">
+              <h3 class="font-bold text-lg mb-4 text-gray-800 border-b pb-2">Recomendações para sua Empresa</h3>
+              <div class="bg-blue-50 p-4 rounded-lg">
+                <ul class="space-y-3">
+                  <li class="flex items-start"><i class="fas fa-lightbulb text-yellow-500 mt-1 mr-2"></i><span>Considere revisar seus preços com a nova alíquota efetiva de 21,75%</span></li>
+                  <li class="flex items-start"><i class="fas fa-lightbulb text-yellow-500 mt-1 mr-2"></i><span>Prepare-se para a transição contábil em 2025</span></li>
+                  <li class="flex items-start"><i class="fas fa-lightbulb text-yellow-500 mt-1 mr-2"></i><span>Analise oportunidades de créditos fiscais com fornecedores</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex justify-between">
+          <button class="text-blue-600 hover:text-blue-800 font-medium flex items-center"><i class="fas fa-download mr-2"></i> Baixar Relatório Completo</button>
+          <button class="text-blue-600 hover:text-blue-800 font-medium flex items-center"><i class="fas fa-comments mr-2"></i> Conversar com Especialista</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analisador CNPJ -->
+    <div id="cnpj-tab" class="tab-content">
+      <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="p-4 bg-purple-600 text-white">
+          <h2 class="text-xl font-bold flex items-center"><i class="fas fa-building mr-2"></i> Analisador de CNPJ</h2>
+          <p class="text-purple-100 text-sm">Descubra como a Reforma Tributária impactará sua empresa com base nos CNAEs cadastrados</p>
+        </div>
+        <div class="p-6">
+          <div class="mb-6">
+            <label class="block text-gray-700 mb-2 font-medium">Digite o CNPJ</label>
+            <div class="flex">
+              <input id="cnpj-input" type="text" placeholder="00.000.000/0000-00" class="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500"/>
+              <button onclick="analyzeCNPJ()" class="bg-purple-600 text-white px-6 py-2 rounded-r-lg hover:bg-purple-700 transition flex items-center">
+                <i class="fas fa-search mr-2"></i> Analisar
+              </button>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Não armazenamos seus dados. Consulte apenas com a Receita Federal.</p>
+          </div>
+          <div class="border border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <i class="fas fa-building text-gray-300 text-4xl mb-3"></i>
+            <p class="text-gray-500">Digite um CNPJ válido para analisar o impacto da Reforma Tributária</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultados CNPJ (demo) -->
+      <div id="cnpj-results" class="mt-8 hidden">
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="p-4 bg-blue-600 text-white">
+            <div class="flex justify-between items-center">
+              <h2 class="text-xl font-bold flex items-center"><i class="fas fa-file-alt mr-2"></i> Resultado da Análise</h2>
+              <span class="bg-white text-blue-600 px-3 py-1 rounded-full text-sm font-bold">CNPJ: 12.345.678/0001-90</span>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="mb-6">
+              <h3 class="font-bold text-lg mb-2 text-gray-800">Empresa: <span class="font-normal">Tech Solutions Ltda</span></h3>
+              <p class="text-gray-600">Porte: MEI • Data de Abertura: 15/03/2018</p>
+            </div>
+            <div class="mb-8">
+              <h3 class="font-bold text-lg mb-4 text-gray-800 border-b pb-2">Impacto da Reforma por CNAE</h3>
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CNAE</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descrição</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Impacto</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alíquota Atual</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nova Alíquota</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-gray-200">
+                    <tr><td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">6201-5</td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Desenvolvimento de software</td><td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"><i class="fas fa-arrow-down mr-1"></i> Beneficiado</span></td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">22,5%</td><td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-green-600">18,0%</td></tr>
+                    <tr><td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">6204-0</td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Consultoria em TI</td><td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"><i class="fas fa-arrow-up mr-1"></i> Impactado</span></td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">16,0%</td><td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-red-600">21,5%</td></tr>
+                    <tr><td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">6311-9</td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Hospedagem de sites</td><td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"><i class="fas fa-equals mr-1"></i> Neutro</span></td><td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">19,0%</td><td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-600">19,0%</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="bg-blue-50 p-4 rounded-lg">
+              <h3 class="font-bold text-lg mb-3 text-gray-800">Resumo do Impacto</h3>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-3 rounded-lg shadow-sm"><p class="text-sm text-gray-500">CNAEs Beneficiados</p><p class="text-2xl font-bold text-green-600">1</p></div>
+                <div class="bg-white p-3 rounded-lg shadow-sm"><p class="text-sm text-gray-500">CNAEs Impactados</p><p class="text-2xl font-bold text-red-600">1</p></div>
+                <div class="bg-white p-3 rounded-lg shadow-sm"><p class="text-sm text-gray-500">CNAEs Neutros</p><p class="text-2xl font-bold text-gray-600">1</p></div>
+              </div>
+              <div class="mt-4">
+                <h4 class="font-medium mb-2 text-gray-800">Recomendações:</h4>
+                <ul class="list-disc pl-5 space-y-1 text-gray-700">
+                  <li>Considere separar as atividades de consultoria em outra empresa para mitigar impactos</li>
+                  <li>Aproveite a redução no desenvolvimento de software para investir em novos produtos</li>
+                  <li>Prepare-se para a transição fiscal com antecedência</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex justify-between">
+          <button class="text-blue-600 hover:text-blue-800 font-medium flex items-center"><i class="fas fa-download mr-2"></i> Baixar Relatório Completo</button>
+          <button class="text-blue-600 hover:text-blue-800 font-medium flex items-center"><i class="fas fa-chart-line mr-2"></i> Simular Cenários</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOVA ABA: Consulta NCM -->
+    <div id="ncm-tab" class="tab-content">
+      <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="p-4 bg-indigo-600 text-white">
+          <h2 class="text-xl font-bold flex items-center"><i class="fas fa-barcode mr-2"></i> Consulta NCM</h2>
+          <p class="text-indigo-100 text-sm">Localize o NCM por código (6 ou 8 dígitos) ou por descrição e veja um resumo da estrutura.</p>
+        </div>
+
+        <div class="p-6">
+          <label class="block text-gray-700 font-medium mb-2">Código NCM (6/8 dígitos) ou descrição</label>
+          <div class="flex">
+            <input id="ncm-input" type="text" placeholder="Ex: 210310 ou 'café torrado'" class="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" oninput="handleNcmInput(this)"/>
+            <button id="ncm-search-btn" class="bg-indigo-600 text-white px-6 py-2 rounded-r-lg hover:bg-indigo-700 transition flex items-center" onclick="searchNCM()">
+              <i class="fas fa-search mr-2"></i> Buscar
+            </button>
+          </div>
+          <p class="text-xs text-gray-500 mt-2">Dica: cole o NCM com ou sem pontos. Ex.: 210310 / 2103.10 ou 09012100 / 0901.21.00</p>
+
+          <!-- Sugestões -->
+          <div id="ncm-suggestions" class="mt-4 hidden">
+            <p class="text-sm text-gray-600 mb-2">Sugestões:</p>
+            <div id="ncm-suggestions-chips" class="flex flex-wrap gap-2"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultados -->
+      <div id="ncm-result" class="max-w-4xl mx-auto mt-6 hidden fade-in">
+        <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+          <div class="p-4 bg-gray-50 border-b">
+            <h3 id="ncm-title" class="text-lg font-bold text-gray-900">NCM —</h3>
+            <p id="ncm-desc" class="text-sm text-gray-600 mt-1">Descrição oficial (confirme no portal).</p>
+          </div>
+
+          <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="font-semibold text-gray-800 mb-3">Árvore do NCM</h4>
+              <ul id="ncm-tree" class="space-y-2 text-sm"></ul>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-800 mb-3">Notas / Observações</h4>
+              <ul id="ncm-notes" class="list-disc list-inside text-sm text-gray-700 space-y-1"></ul>
+            </div>
+          </div>
+
+          <div class="px-6 pb-6">
+            <div class="flex flex-col sm:flex-row gap-3">
+              <button id="copy-ncm-btn" class="inline-flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg">
+                <i class="fas fa-copy mr-2"></i> Copiar NCM
+              </button>
+              <a id="siscomex-link" href="https://portalunico.siscomex.gov.br/classif/" target="_blank" rel="noopener" class="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">
+                <i class="fas fa-external-link-alt mr-2"></i> Abrir no SISCOMEX Classif
+              </a>
+            </div>
+            <p class="text-xs text-gray-500 mt-3">
+              Fonte: consulta pública no Portal Único Siscomex – Classif. Esta é uma <b>consulta informativa</b>. Verifique no portal oficial e com seu contador.
+            </p>
+          </div>
+        </div>
+
+        <!-- Lista de candidatos (quando termo é ambíguo) -->
+        <div id="ncm-candidates" class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden mt-6 hidden">
+          <div class="p-4 bg-gray-50 border-b">
+            <h3 class="text-lg font-bold text-gray-900">Opções semelhantes (confirme no SISCOMEX)</h3>
+            <p class="text-sm text-gray-600 mt-1">Selecione uma opção para tentar o código ou refine a descrição.</p>
+          </div>
+          <div id="ncm-candidates-list" class="p-6 space-y-3"></div>
+        </div>
+      </div>
+    </div>
+    <!-- FIM NCM -->
+  </main>
+
+  <footer class="bg-gray-800 text-white py-8 mt-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div><h3 class="font-bold text-lg mb-4">TaxAI</h3><p class="text-gray-400">Sua plataforma inteligente para entender e se preparar para a Reforma Tributária.</p></div>
+        <div><h3 class="font-bold text-lg mb-4">Recursos</h3><ul class="space-y-2"><li><a href="#" class="text-gray-400 hover:text-white">Chat Tributário</a></li><li><a href="#" class="text-gray-400 hover:text-white">Simulador</a></li><li><a href="#" class="text-gray-400 hover:text-white">Analisador CNPJ</a></li><li><a href="#" class="text-gray-400 hover:text-white">Materiais Educativos</a></li></ul></div>
+        <div><h3 class="font-bold text-lg mb-4">Links Úteis</h3><ul class="space-y-2"><li><a href="#" class="text-gray-400 hover:text-white">Receita Federal</a></li><li><a href="#" class="text-gray-400 hover:text-white">Texto da Reforma</a></li><li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li><li><a href="#" class="text-gray-400 hover:text-white">Contato</a></li></ul></div>
+        <div><h3 class="font-bold text-lg mb-4">Newsletter</h3><p class="text-gray-400 mb-2">Receba atualizações sobre a Reforma Tributária</p><div class="flex"><input type="email" placeholder="Seu e-mail" class="px-3 py-2 bg-gray-700 text-white rounded-l-lg focus:outline-none w-full"><button class="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700"><i class="fas fa-paper-plane"></i></button></div></div>
+      </div>
+      <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400"><p>© 2023 TaxAI. Todos os direitos reservados.</p></div>
+    </div>
+  </footer>
+
+  <script>
+    /* ========= TABS (global) ========= */
+    window.openTab = function(tabId, ev){
+      document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+      const el = document.getElementById(tabId);
+      if(el) el.classList.add('active');
+
+      document.querySelectorAll('.tab-btn').forEach(btn=>{
+        btn.classList.remove('bg-blue-700');
+        btn.classList.add('hover:bg-blue-700');
+      });
+
+      let btn = ev && ev.currentTarget
+        ? ev.currentTarget
+        : Array.from(document.querySelectorAll('.tab-btn')).find(b=> (b.getAttribute('onclick')||'').includes(tabId));
+      if(btn){ btn.classList.add('bg-blue-700'); btn.classList.remove('hover:bg-blue-700'); }
+    };
+
+    /* ========= CHAT ========= */
+    function sendMessage(){
+      const input = document.getElementById('chat-input');
+      const message = input.value.trim();
+      if(!message) return;
+
+      const chat = document.getElementById('chat-container');
+
+      const user = document.createElement('div');
+      user.className = 'chat-message flex justify-end';
+      user.innerHTML = `
+        <div class="bg-blue-600 text-white p-3 rounded-lg shadow-sm max-w-xs md:max-w-md lg:max-w-lg">
+          <p>${message}</p>
+          <p class="text-xs text-blue-100 mt-1">${getCurrentTime()}</p>
+        </div>`;
+      chat.appendChild(user);
+      input.value = '';
+      chat.scrollTop = chat.scrollHeight;
+
+      setTimeout(()=>{
+        const bot = document.createElement('div');
+        bot.className = 'chat-message flex';
+        bot.innerHTML = `
+          <div class="flex-shrink-0 mr-3">
+            <div class="bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center"><i class="fas fa-robot"></i></div>
+          </div>
+          <div class="bg-white p-3 rounded-lg shadow-sm max-w-xs md:max-w-md lg:max-w-lg">
+            <p class="text-gray-800">${getBotResponse(message)}</p>
+            <p class="text-xs text-gray-500 mt-1">${getCurrentTime()}</p>
+          </div>`;
+        chat.appendChild(bot);
+        chat.scrollTop = chat.scrollHeight;
+      },1000);
+    }
+    function getCurrentTime(){ const d = new Date(); return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); }
+    function getBotResponse(msg){
+      const m = msg.toLowerCase();
+      if(m.includes('alíquota')||m.includes('percentual')) return 'A alíquota padrão do IBS/CBS é estimada na faixa de 25–30%, variando por regras e exceções. Para um número mais próximo, informe seu CNAE principal.';
+      if(m.includes('simples nacional')) return 'Para empresas do Simples haverá regime simplificado na transição, com regras específicas. Posso detalhar conforme seu faturamento e CNAE.';
+      if(m.includes('quando')||m.includes('vigor')) return 'A implementação é faseada, com transição e regras específicas a partir dos próximos anos. Detalhes variam por tipo de contribuinte.';
+      if(m.includes('crédito fiscal')) return 'O novo sistema busca crédito amplo para evitar cumulatividade, beneficiando cadeias longas e a indústria.';
+      return 'A Reforma busca unificar tributos sobre consumo (IBS/CBS) e simplificar o sistema. Traga seu setor/regime para uma resposta mais direcionada.';
+    }
+    function insertQuestion(btn){ document.getElementById('chat-input').value = btn.textContent; document.getElementById('chat-input').focus(); }
+    document.getElementById('chat-input').addEventListener('keypress', e => { if(e.key==='Enter') sendMessage(); });
+
+    /* ========= SIMULADOR (demo) ========= */
+    document.querySelector('#simulator-tab button.bg-green-600').addEventListener('click', function(){
+      this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Calculando...';
+      this.classList.add('opacity-75'); this.disabled = true;
+      setTimeout(()=>{
+        document.getElementById('simulator-results').classList.remove('hidden');
+        this.innerHTML = '<i class="fas fa-calculator mr-2"></i> Simular Impacto Tributário';
+        this.classList.remove('opacity-75'); this.disabled = false;
+        document.getElementById('simulator-results').scrollIntoView({behavior:'smooth'});
+      }, 1500);
+    });
+
+    /* ========= CNPJ (demo) ========= */
+    function analyzeCNPJ(){
+      const cnpj = document.getElementById('cnpj-input').value.trim();
+      if(cnpj.length!==18){ alert('Por favor, insira um CNPJ válido no formato 00.000.000/0000-00'); return; }
+      const btn = document.querySelector('#cnpj-tab button.bg-purple-600');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Analisando...'; btn.classList.add('opacity-75'); btn.disabled = true;
+      setTimeout(()=>{
+        document.getElementById('cnpj-results').classList.remove('hidden');
+        btn.innerHTML = '<i class="fas fa-search mr-2"></i> Analisar'; btn.classList.remove('opacity-75'); btn.disabled = false;
+        document.getElementById('cnpj-results').scrollIntoView({behavior:'smooth'});
+      }, 1500);
+    }
+
+    /* ========= NCM ========= */
+    // 6 dígitos -> descrição curta (exemplos; amplie quando quiser)
+    const NCM6_MAP = {
+      "210310":"Molho de soja",
+      "210320":"Ketchup e outros molhos de tomate",
+      "210330":"Farinha de mostarda e mostarda preparada",
+      "210390":"Outros preparados para molhos",
+      "090121":"Café torrado, não descafeinado",
+      "090122":"Café torrado, descafeinado",
+      "610910":"Camisetas (T-shirts) de algodão, de malha",
+      "851713":"Smartphones",
+      "847130":"Laptops/portáteis para processamento de dados",
+      "731815":"Parafusos de ferro/aço"
+    };
+    const NCM_TERM_SUGGESTIONS = ["café torrado","café verde","molho de soja","ketchup","placa eletrônica","smartphone","laptop","camiseta de algodão","parafuso de aço","software em mídia"];
+
+    function handleNcmInput(el){
+      const raw = el.value.trim();
+      const digits = raw.replace(/\D/g,'');
+      const box = document.getElementById('ncm-suggestions');
+      const chips = document.getElementById('ncm-suggestions-chips');
+
+      if(digits && /^\d+$/.test(digits)){
+        el.value = formatNCMVisual(digits);
+        box.classList.add('hidden'); return;
+      }
+      if(raw.length>=3){
+        const matches = NCM_TERM_SUGGESTIONS.filter(t=>t.toLowerCase().includes(raw.toLowerCase())).slice(0,5);
+        if(matches.length){
+          chips.innerHTML=''; matches.forEach(t=>{
+            const s=document.createElement('span');
+            s.className='suggestion-chip inline-flex items-center px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm';
+            s.innerHTML = `<i class="fas fa-lightbulb mr-2"></i>${t}`;
+            s.onclick = ()=>{ document.getElementById('ncm-input').value=t; searchNCM(); };
+            chips.appendChild(s);
+          });
+          box.classList.remove('hidden');
+        } else { box.classList.add('hidden'); }
+      } else box.classList.add('hidden');
+    }
+    function formatNCMVisual(d){ d=d.slice(0,8); if(d.length<=6){ return d.replace(/^(\d{0,4})(\d{0,2}).*$/,(m,a,b)=>[a,b&&a.length?'.':'',b].join('')); } return d.replace(/^(\d{0,4})(\d{0,2})(\d{0,2}).*$/,(m,a,b,c)=>[a,b&&a.length?'.':'',b,c?'.':'',c].join('')); }
+    function cleanNCM(v){ return v.replace(/\D/g,'').slice(0,8); }
+    function formatNCM6(d6){ return d6.replace(/^(\d{4})(\d{2})$/,'$1.$2'); }
+    function formatNCM8(d8){ return d8.replace(/^(\d{4})(\d{2})(\d{2})$/,'$1.$2.$3'); }
+
+    function buildNcmTree(d){
+      const len = d.length;
+      return { capitulo:d.slice(0,2), posicao:d.slice(0,4), subposicao: len>=6?d.slice(0,6):'—', item: len===8?d.slice(0,8):'—', excecao:'—' };
+    }
+    function renderTree(t){
+      const ul = document.getElementById('ncm-tree');
+      const li=(k,v)=>`<li><span class="font-medium text-gray-700">${k}:</span> <span class="text-gray-800">${v}</span></li>`;
+      ul.innerHTML = [ li('Capítulo (2 díg.)',t.capitulo), li('Posição (4 díg.)',t.posicao), li('Subposição (6 díg.)', t.subposicao==='—'?'—':formatNCM6(t.subposicao)), li('Item (8 díg.)', t.item==='—'?'—':formatNCM8(t.item)), li('Exceção (EX)', t.excecao) ].join('');
+    }
+    function renderNotes(){
+      const bullets = [
+        'Use 6 dígitos para a Subposição; para detalhar o Item, utilize 8 dígitos.',
+        'Confirme a classificação pelas RGIs e Notas de Seção/Capítulo.',
+        'Partes/acessórios podem ter posição própria — verifique antes.',
+        'Para kits, considere o caráter essencial.',
+        'Alíquotas variam por regime/legislação — use o Simulador/consulta oficial.'
+      ];
+      document.getElementById('ncm-notes').innerHTML = bullets.map(b=>`<li>${b}</li>`).join('');
+    }
+    function setTitleAndDesc(t,d){ document.getElementById('ncm-title').textContent = t||'NCM —'; document.getElementById('ncm-desc').textContent = d||'Descrição oficial: confirme no SISCOMEX.'; }
+    function setupActionsFor(code6){
+      const title = document.getElementById('ncm-title').textContent;
+      const copyBtn = document.getElementById('copy-ncm-btn');
+      copyBtn.onclick = async()=> {
+        const m = title.match(/NCM\s+([0-9\.\-]+)/); const toCopy = m?m[1]:code6;
+        try{ await navigator.clipboard.writeText(toCopy); copyBtn.textContent='Copiado!'; setTimeout(()=>copyBtn.innerHTML='<i class="fas fa-copy mr-2"></i> Copiar NCM',1000); }catch(e){ alert('Não foi possível copiar.'); }
+      };
+      const pos4 = code6.slice(0,4);
+      document.getElementById('siscomex-link').href = `https://portalunico.siscomex.gov.br/classif/#/nomenclatura/${pos4}`;
+    }
+    function suggestRelatedDescriptions(term){
+      const t=term.toLowerCase(); const exact=NCM_TERM_SUGGESTIONS.filter(x=>x.toLowerCase()===t);
+      const part=NCM_TERM_SUGGESTIONS.filter(x=>x.toLowerCase().includes(t)&&!exact.includes(x));
+      return [...exact,...part].slice(0,5);
+    }
+    function prefillDesc(desc){ document.getElementById('ncm-input').value=desc; document.getElementById('ncm-input').focus(); }
+    function escapeQuotes(s){ return s.replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+    function searchNCM(){
+      const input = document.getElementById('ncm-input').value.trim();
+      const digits = cleanNCM(input); const len = digits.length;
+      const resultWrap = document.getElementById('ncm-result');
+      const candidatesBox = document.getElementById('ncm-candidates');
+      const candidatesList = document.getElementById('ncm-candidates-list');
+
+      setTitleAndDesc('', 'Descrição oficial: confirme no SISCOMEX.');
+      document.getElementById('ncm-tree').innerHTML=''; document.getElementById('ncm-notes').innerHTML='';
+      candidatesList.innerHTML=''; candidatesBox.classList.add('hidden');
+
+      if(len===6 || len===8){
+        const code6 = digits.slice(0,6);
+        const name6 = NCM6_MAP[code6] || '— (use o link para conferir no portal)';
+        const shown = len===6 ? formatNCM6(code6) : formatNCM8(digits);
+        setTitleAndDesc(`NCM ${shown}`, name6);
+        renderTree(buildNcmTree(digits)); renderNotes(); setupActionsFor(code6);
+        resultWrap.classList.remove('hidden'); resultWrap.scrollIntoView({behavior:'smooth'}); return;
+      }
+
+      if(input.length<3){ alert('Informe ao menos 3 caracteres ou um NCM de 6/8 dígitos.'); return; }
+      const related = suggestRelatedDescriptions(input);
+      if(!related.length){ resultWrap.classList.add('hidden'); alert('Não encontrei correspondências claras. Seja mais específico ou informe o NCM (6 dígitos).'); return; }
+
+      related.forEach(desc=>{
+        const row=document.createElement('div');
+        row.className='flex items-center justify-between border border-gray-200 rounded-lg p-3';
+        row.innerHTML = `
+          <div class="text-sm text-gray-800">${desc}</div>
+          <div class="flex gap-2">
+            <button class="px-3 py-1 text-sm rounded-lg bg-gray-100 hover:bg-gray-200" onclick="prefillDesc('${escapeQuotes(desc)}')">Usar descrição</button>
+            <a class="px-3 py-1 text-sm rounded-lg bg-indigo-600 text-white hover:bg-indigo-700" href="https://portalunico.siscomex.gov.br/classif/" target="_blank" rel="noopener">Abrir no SISCOMEX</a>
+          </div>`;
+        candidatesList.appendChild(row);
+      });
+      resultWrap.classList.remove('hidden'); candidatesBox.classList.remove('hidden'); resultWrap.scrollIntoView({behavior:'smooth'});
+    }
+
+    // Enter no campo NCM
+    document.getElementById('ncm-input')?.addEventListener('keypress', e=>{ if(e.key==='Enter') searchNCM(); });
+
+    // Expõe funções usadas via onclick/inline (seguro)
+    window.sendMessage = sendMessage;
+    window.insertQuestion = insertQuestion;
+    window.analyzeCNPJ = analyzeCNPJ;
+    window.searchNCM = searchNCM;
+    window.handleNcmInput = handleNcmInput;
+  </script>
+</body>
+</html>

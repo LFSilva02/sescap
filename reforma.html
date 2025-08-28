@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FiscAI | Central de inteligência da Reforma tributária</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%);
+        }
+        .tool-card {
+            transition: all 0.3s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .persona-card {
+            transition: all 0.3s ease;
+        }
+        .persona-card:hover {
+            transform: translateY(-5px);
+        }
+        .price-card {
+            transition: all 0.3s ease;
+        }
+        .price-card:hover {
+            transform: scale(1.03);
+        }
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .chat-container {
+            transition: all 0.3s ease;
+        }
+        .chat-message-ai {
+            border-radius: 18px 18px 18px 4px;
+        }
+        .chat-message-user {
+            border-radius: 18px 18px 4px 18px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .simulator-progress {
+            height: 6px;
+            transition: width 0.3s ease;
+        }
+        .result-card {
+            transition: all 0.3s ease;
+        }
+        .result-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .cnpj-analysis-loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(59, 130, 246, 0.3);
+            border-radius: 50%;
+            border-top-color: #3b82f6;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-500 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fas fa-calculator text-white text-xl"></i>
+                </div>
+                <span class="text-xl font-bold text-blue-800">FiscAI</span>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#como-funciona" class="text-gray-600 hover:text-blue-600 transition">Como Funciona</a>
+                <a href="#para-quem" class="text-gray-600 hover:text-blue-600 transition">Para Quem é</a>
+                <a href="#ferramentas" class="text-gray-600 hover:text-blue-600 transition">Ferramentas</a>
+                <a href="#precos" class="text-gray-600 hover:text-blue-600 transition">Preços</a>
+                <a href="#faq" class="text-gray-600 hover:text-blue-600 transition">FAQ</a>
+            </nav>
+            <div class="flex items-center">
+                <a href="taxaia.html" class="bg-gradient-to-br from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-6 py-2 rounded-lg font-medium transition shadow-md hover:shadow-lg">
+                Acesse a Ferramenta
+                </a>                
+                <button class="md:hidden ml-4 text-gray-600" id="mobile-menu-button">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-white w-full py-4 px-4 shadow-md" id="mobile-menu">
+            <a href="#como-funciona" class="block py-2 text-gray-600 hover:text-blue-600 transition">Como Funciona</a>
+            <a href="#para-quem" class="block py-2 text-gray-600 hover:text-blue-600 transition">Para Quem é</a>
+            <a href="#ferramentas" class="block py-2 text-gray-600 hover:text-blue-600 transition">Ferramentas</a>
+            <a href="#precos" class="block py-2 text-gray-600 hover:text-blue-600 transition">Preços</a>
+            <a href="#faq" class="block py-2 text-gray-600 hover:text-blue-600 transition">FAQ</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient py-20 md:py-32">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-12 md:mb-0">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">A Reforma Tributária, <span class="text-blue-600">simplificada</span>.</h1>
+                <p class="text-xl text-gray-700 mb-8">Analise o impacto no seu negócio em segundos. Nossa IA decodifica o novo sistema tributário para você tomar as melhores decisões.</p>
+                
+                <div class="bg-white p-2 rounded-xl shadow-lg max-w-lg border border-gray-100">
+                    <div class="flex flex-col sm:flex-row">
+                        <input type="text" placeholder="Digite seu CNPJ" class="flex-grow px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2 sm:mb-0 sm:mr-2" id="hero-cnpj-input">
+                        <button class="bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-3 rounded-lg font-medium transition shadow-md hover:shadow-lg whitespace-nowrap" id="hero-cnpj-button">
+                            Analisar Grátis Agora
+                        </button>
+                    </div>
+                </div>
+                
+                <p class="mt-6 text-gray-600 flex items-center">
+                    <i class="fas fa-check-circle text-green-500 mr-2"></i> 
+                    <span>Junte-se a mais de 1.000 empresas e contadores que já estão se preparando para o futuro.</span>
+                </p>
+            </div>
+            <div class="md:w-1/2 flex justify-center">
+                <div class="relative w-full max-w-lg">
+                    <div class="absolute inset-0 bg-blue-500 rounded-3xl opacity-10 blur-xl"></div>
+                    <div class="relative bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
+                        <div class="flex justify-between mb-6">
+                            <div class="w-1/3 bg-blue-50 rounded-lg p-4 border border-blue-100">
+                                <div class="h-3 bg-blue-500 rounded-full mb-2"></div>
+                                <div class="h-3 bg-blue-500 rounded-full mb-2 w-2/3"></div>
+                                <div class="h-3 bg-blue-500 rounded-full w-1/2"></div>
+                            </div>
+                            <div class="w-1/3 bg-green-50 rounded-lg p-4 border border-green-100">
+                                <div class="h-3 bg-green-500 rounded-full mb-2 w-4/5"></div>
+                                <div class="h-3 bg-green-500 rounded-full mb-2 w-1/2"></div>
+                                <div class="h-3 bg-green-500 rounded-full w-3/4"></div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-6 mb-6 border border-gray-200">
+                            <div class="flex items-center mb-4">
+                                <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-500 rounded-full flex items-center justify-center text-white mr-3">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div>
+                                    <div class="h-3 bg-gray-300 rounded-full w-32 mb-1"></div>
+                                    <div class="h-2 bg-gray-200 rounded-full w-24"></div>
+                                </div>
+                            </div>
+                            <div class="h-3 bg-gray-300 rounded-full w-full mb-2"></div>
+                            <div class="h-3 bg-gray-300 rounded-full w-4/5 mb-2"></div>
+                            <div class="h-3 bg-gray-300 rounded-full w-3/4"></div>
+                        </div>
+                        <div class="bg-blue-50 rounded-lg p-4 border border-blue-100">
+                            <div class="flex">
+                                <div class="w-1/3 h-24 bg-blue-100 rounded-lg mr-3 flex items-center justify-center border border-blue-200">
+                                    <i class="fas fa-chart-pie text-blue-500 text-2xl"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="h-3 bg-blue-200 rounded-full w-3/4 mb-3"></div>
+                                    <div class="h-2 bg-blue-100 rounded-full w-1/2 mb-2"></div>
+                                    <div class="h-2 bg-blue-100 rounded-full w-2/3"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Como Funciona Section -->
+    <section id="como-funciona" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Três ferramentas, uma plataforma.</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">A clareza que você precisa para navegar pela Reforma Tributária com confiança.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Ferramenta 1 -->
+                <div class="tool-card bg-white p-8 rounded-xl shadow-md border border-gray-100 hover:border-blue-100">
+                    <div class="feature-icon bg-blue-50 text-blue-600 border border-blue-100">
+                        <i class="fas fa-search fa-2x"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Diagnóstico Imediato</h3>
+                    <p class="text-gray-600 mb-4">Insira seu CNPJ e nossa IA identifica seus CNAEs, mostrando na hora quais serão os principais impactos da reforma, setor por setor da sua empresa.</p>
+                    <button class="text-blue-600 font-medium flex items-center hover:text-blue-800 transition">
+                        Saiba mais <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                    </button>
+                </div>
+                
+                <!-- Ferramenta 2 -->
+                <div class="tool-card bg-white p-8 rounded-xl shadow-md border border-gray-100 hover:border-green-100">
+                    <div class="feature-icon bg-green-50 text-green-600 border border-green-100">
+                        <i class="fas fa-calculator fa-2x"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Compare Cenários</h3>
+                    <p class="text-gray-600 mb-4">Visualize o "antes e depois". Insira seu faturamento e compare sua carga tributária atual com as projeções do novo sistema (IBS e CBS).</p>
+                    <button class="text-blue-600 font-medium flex items-center hover:text-blue-800 transition">
+                        Saiba mais <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                    </button>
+                </div>
+                
+                <!-- Ferramenta 3 -->
+                <div class="tool-card bg-white p-8 rounded-xl shadow-md border border-gray-100 hover:border-purple-100">
+                    <div class="feature-icon bg-purple-50 text-purple-600 border border-purple-100">
+                        <i class="fas fa-comments fa-2x"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Respostas na Ponta dos Dedos</h3>
+                    <p class="text-gray-600 mb-4">Tem uma dúvida específica sobre alíquotas, créditos ou exceções? Converse com nossa IA treinada com a legislação oficial.</p>
+                    <button class="text-blue-600 font-medium flex items-center hover:text-blue-800 transition">
+                        Saiba mais <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ferramentas Section -->
+    <section id="ferramentas" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Experimente nossas ferramentas</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Conheça na prática como podemos ajudar você a entender a Reforma Tributária.</p>
+            </div>
+            
+            <!-- Tabs Navigation -->
+            <div class="flex flex-wrap border-b border-gray-200 mb-8">
+                <button class="tab-button px-6 py-3 font-medium text-gray-600 hover:text-blue-600 transition border-b-2 border-transparent hover:border-blue-200 active" data-tab="chat">
+                    <i class="fas fa-comments mr-2"></i> Chat com IA
+                </button>
+                <button class="tab-button px-6 py-3 font-medium text-gray-600 hover:text-blue-600 transition border-b-2 border-transparent hover:border-blue-200" data-tab="simulator">
+                    <i class="fas fa-calculator mr-2"></i> Simulador
+                </button>
+                <button class="tab-button px-6 py-3 font-medium text-gray-600 hover:text-blue-600 transition border-b-2 border-transparent hover:border-blue-200" data-tab="cnpj">
+                    <i class="fas fa-search mr-2"></i> Analisador de CNPJ
+                </button>
+            </div>
+            
+            <!-- Tab Contents -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
+                <!-- Chat with AI Tab -->
+                <div class="tab-content p-6 active" id="chat-tab">
+                    <div class="flex flex-col h-96">
+                        <!-- Chat Header -->
+                        <div class="flex items-center justify-between mb-4 pb-4 border-b border-gray-200">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-500 rounded-full flex items-center justify-center text-white mr-3">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-900">Assistente de Reforma Tributária</h3>
+                                    <p class="text-xs text-gray-500">Online - Baseado na legislação atual</p>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Chat Messages -->
+                        <div class="flex-1 overflow-y-auto mb-4 space-y-4 pr-2" id="chat-messages">
+                            <div class="flex">
+                                <div class="max-w-3/4 bg-blue-50 p-4 text-gray-800 chat-message-ai">
+                                    <p>Olá! Sou o assistente especializado em Reforma Tributária. Posso te ajudar a entender como as mudanças afetam seu negócio. Qual sua dúvida?</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Chat Input -->
+                        <div class="border-t border-gray-200 pt-4">
+                            <div class="flex">
+                                <input type="text" placeholder="Digite sua pergunta sobre a Reforma Tributária..." class="flex-grow px-4 py-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="chat-input">
+                                <button class="bg-gradient-to-br from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-6 rounded-r-lg" id="send-message">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2">Exemplo: "Como ficará o ICMS com a reforma?" ou "Meu negócio é do Simples, o que muda?"</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Simulator Tab -->
+                <div class="tab-content p-6" id="simulator-tab">
+                    <div class="flex flex-col">
+                        <!-- Simulator Steps -->
+                        <div class="mb-8">
+                            <div class="flex justify-between mb-2">
+                                <span class="text-sm font-medium text-blue-600">Passo 1 de 4</span>
+                                <span class="text-sm font-medium">20% completo</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="simulator-progress bg-blue-600 h-2 rounded-full" style="width: 20%"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step Content -->
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <!-- Form -->
+                            <div class="md:w-1/2">
+                                <h3 class="text-xl font-bold text-gray-900 mb-6">Informações básicas</h3>
+                                
+                                <div class="space-y-6">
+                                    <div>
+                                        <label class="block text-gray-700 font-medium mb-2" for="regime">Regime Tributário Atual</label>
+                                        <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="regime">
+                                            <option value="">Selecione...</option>
+                                            <option value="simples">Simples Nacional</option>
+                                            <option value="lucro-presumido">Lucro Presumido</option>
+                                            <option value="lucro-real">Lucro Real</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-gray-700 font-medium mb-2" for="setor">Setor de Atuação</label>
+                                        <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="setor">
+                                            <option value="">Selecione...</option>
+                                            <option value="comercio">Comércio</option>
+                                            <option value="industria">Indústria</option>
+                                            <option value="servicos">Serviços</option>
+                                            <option value="agro">Agronegócio</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-gray-700 font-medium mb-2" for="faturamento">Faturamento Mensal (R$)</label>
+                                        <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="faturamento" placeholder="Ex: 50.000">
+                                    </div>
+                                    
+                                    <button class="w-full bg-gradient-to-br from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 rounded-lg font-medium transition shadow-md hover:shadow-lg mt-4" id="simulate-button">
+                                        Simular Impacto
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Preview -->
+                            <div class="md:w-1/2">
+                                <h3 class="text-xl font-bold text-gray-900 mb-6">Pré-visualização dos resultados</h3>
+                                
+                                <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                                    <div class="text-center py-8">
+                                        <i class="fas fa-calculator text-4xl text-gray-300 mb-4"></i>
+                                        <p class="text-gray-500">Preencha os dados ao lado para ver uma simulação do impacto da Reforma Tributária no seu negócio.</p>
+                                    </div>
+                                    
+                                    <!-- This will be populated with results after simulation -->
+                                    <div id="simulator-results" class="hidden">
+                                        <!-- Results will be inserted here by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CNPJ Analyzer Tab -->
+                <div class="tab-content p-6" id="cnpj-tab">
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <!-- Form -->
+                        <div class="md:w-1/2">
+                            <h3 class="text-xl font-bold text-gray-900 mb-6">Analise seu CNPJ</h3>
+                            <p class="text-gray-600 mb-6">Descubra como a Reforma Tributária afetará sua empresa com base nos CNAEs cadastrados.</p>
+                            
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2" for="cnpj">CNPJ</label>
+                                    <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" id="cnpj" placeholder="00.000.000/0000-00">
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="checkbox" class="rounded text-blue-600 focus:ring-blue-500 mr-2" id="terms">
+                                    <label for="terms" class="text-sm text-gray-600">Concordo com os Termos de Uso e Política de Privacidade</label>
+                                </div>
+                                
+                                <button class="w-full bg-gradient-to-br from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 rounded-lg font-medium transition shadow-md hover:shadow-lg" id="analyze-cnpj">
+                                    Analisar CNPJ
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Results -->
+                        <div class="md:w-1/2">
+                            <h3 class="text-xl font-bold text-gray-900 mb-6">Resultados da Análise</h3>
+                            
+                            <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 h-full">
+                                <div class="text-center py-8" id="cnpj-placeholder">
+                                    <i class="fas fa-search text-4xl text-gray-300 mb-4"></i>
+                                    <p class="text-gray-500">Insira um CNPJ válido para analisar os impactos da Reforma Tributária nos CNAEs da empresa.</p>
+                                </div>
+                                
+                                <div id="cnpj-results" class="hidden">
+                                    <!-- Results will be inserted here by JavaScript -->
+                                </div>
+                                
+                                <div id="cnpj-loading" class="hidden text-center py-8">
+                                    <div class="cnpj-analysis-loader mb-4 mx-auto"></div>
+                                    <p class="text-gray-600">Analisando CNPJ e identificando CNAEs...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Para Quem é Section -->
+    <section id="para-quem" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Feito para quem decide</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Nossa plataforma foi desenvolvida para ajudar os principais tomadores de decisão no cenário tributário brasileiro.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Contadores -->
+                <div class="persona-card bg-white p-8 rounded-xl shadow-md hover:shadow-lg border border-gray-100 hover:border-blue-100">
+                    <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 mb-6 border border-blue-100">
+                        <i class="fas fa-user-tie text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Para Contadores</h3>
+                    <p class="text-gray-600 mb-4">Agilize consultas, ofereça relatórios de impacto para seus clientes e posicione seu escritório na vanguarda da contabilidade.</p>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Relatórios personalizados por cliente</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Atualizações automáticas da legislação</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Ferramentas para consultoria estratégica</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-gradient-to-br from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 rounded-lg font-medium transition shadow-md hover:shadow-lg">Saiba mais</button>
+                </div>
+                
+                <!-- Empresários -->
+                <div class="persona-card bg-white p-8 rounded-xl shadow-md hover:shadow-lg border border-gray-100 hover:border-green-100">
+                    <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center text-green-600 mb-6 border border-green-100">
+                        <i class="fas fa-briefcase text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Para Empresários</h3>
+                    <p class="text-gray-600 mb-4">Entenda como a reforma afeta seu preço, margem de lucro e fluxo de caixa. Tome decisões estratégicas com base em dados, não em achismos.</p>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Simulações de cenários financeiros</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Alertas de mudanças relevantes</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Planejamento tributário estratégico</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-gradient-to-br from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 rounded-lg font-medium transition shadow-md hover:shadow-lg">Saiba mais</button>
+                </div>
+                
+                <!-- Gestores Financeiros -->
+                <div class="persona-card bg-white p-8 rounded-xl shadow-md hover:shadow-lg border border-gray-100 hover:border-purple-100">
+                    <div class="w-16 h-16 bg-purple-50 rounded-full flex items-center justify-center text-purple-600 mb-6 border border-purple-100">
+                        <i class="fas fa-chart-line text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Para Gestores Financeiros</h3>
+                    <p class="text-gray-600 mb-4">Prepare seu planejamento orçamentário e garanta a conformidade fiscal da empresa de forma proativa.</p>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Integração com sistemas financeiros</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Relatórios para diretoria e conselho</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Controle de riscos fiscais</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-gradient-to-br from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 rounded-lg font-medium transition shadow-md hover:shadow-lg">Saiba mais</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Depoimentos Section -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">A tranquilidade de estar bem informado</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Veja o que nossos usuários estão dizendo sobre como a Reforma em Foco transformou sua relação com a Reforma Tributária.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Depoimento 1 -->
+                <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 mr-4 border border-blue-100">
+                            <i class="fas fa-user-tie text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-900">João da Silva</h4>
+                            <p class="text-gray-600">Contador</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic mb-6">"A plataforma 'Reforma em Foco' transformou uma montanha de dúvidas em um plano de ação claro. Essencial para qualquer contador que queira oferecer o melhor para seus clientes."</p>
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <!-- Depoimento 2 -->
+                <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-green-600 mr-4 border border-green-100">
+                            <i class="fas fa-user text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-900">Maria Oliveira</h4>
+                            <p class="text-gray-600">CEO de uma PME</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic mb-6">"Como empresária, nunca imaginei que entenderia a Reforma Tributária. Com essa plataforma, consegui simular cenários e tomar decisões estratégicas para minha empresa."</p>
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <!-- Depoimento 3 -->
+                <div class="bg-white p-8 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center text-purple-600 mr-4 border border-purple-100">
+                            <i class="fas fa-user text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-900">Carlos Mendes</h4>
+                            <p class="text-gray-600">Diretor Financeiro</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic mb-6">"O simulador de cenários nos permitiu antecipar impactos financeiros e ajustar nosso planejamento com meses de antecedência. Inestimável para nossa gestão."</p>
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Preços Section -->
+    <section id="precos" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Escolha o plano que se adapta à sua necessidade</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Comece gratuitamente e atualize conforme sua necessidade cresce.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <!-- Plano Gratuito -->
+                <div class="price-card bg-white p-8 rounded-xl shadow-md border border-gray-200 hover:border-blue-100">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Análise Básica</h3>
+                    <p class="text-gray-600 mb-6">Ideal para quem quer testar a plataforma</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-gray-900">R$ 0</span>
+                        <span class="text-gray-600">/mês</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">1 análise de CNPJ</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">3 simulações simples</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Acesso a relatórios básicos</span>
+                        </li>
+                        <li class="flex items-start opacity-50">
+                            <i class="fas fa-times text-gray-400 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Chat com IA</span>
+                        </li>
+                        <li class="flex items-start opacity-50">
+                            <i class="fas fa-times text-gray-400 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Simulações avançadas</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 rounded-lg font-medium transition shadow-sm hover:shadow-md">Comece Grátis</button>
+                </div>
+                
+                <!-- Plano Profissional -->
+                <div class="price-card bg-white p-8 rounded-xl shadow-lg border-2 border-blue-500 relative hover:border-blue-600">
+                    <div class="absolute top-0 right-0 bg-gradient-to-br from-blue-600 to-blue-500 text-white px-4 py-1 rounded-bl-lg rounded-tr-lg text-sm font-medium">
+                        Mais Popular
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Contador Pro</h3>
+                    <p class="text-gray-600 mb-6">Para profissionais que precisam de análises completas</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-gray-900">R$ 199</span>
+                        <span class="text-gray-600">/mês</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Análises ilimitadas</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Simulador completo</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Acesso ao Chat com IA</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Relatórios personalizados</span>
+                        </li>
+                        <li class="flex items-start opacity-50">
+                            <i class="fas fa-times text-gray-400 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Múltiplos usuários</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-gradient-to-br from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 rounded-lg font-medium transition shadow-md hover:shadow-lg">Comece Agora</button>
+                </div>
+                
+                <!-- Plano Empresarial -->
+                <div class="price-card bg-white p-8 rounded-xl shadow-md border border-gray-200 hover:border-blue-100">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Business</h3>
+                    <p class="text-gray-600 mb-6">Para equipes e empresas com necessidades avançadas</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-gray-900">R$ 499</span>
+                        <span class="text-gray-600">/mês</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Tudo no Contador Pro</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Múltiplos usuários</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Integrações com ERP</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Suporte prioritário</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">Treinamentos exclusivos</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-gradient-to-br from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 rounded-lg font-medium transition shadow-md hover:shadow-lg">Comece Agora</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Dúvidas Comuns</h2>
+                <p class="text-xl text-gray-600">Encontre respostas para as perguntas mais frequentes sobre a Reforma em Foco.</p>
+            </div>
+            
+            <div class="space-y-4">
+                <!-- Pergunta 1 -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden hover:border-blue-200 transition">
+                    <button class="faq-question w-full flex justify-between items-center p-6 bg-white hover:bg-gray-50 transition">
+                        <h3 class="text-lg font-medium text-left text-gray-900">Os cálculos estão atualizados com a legislação mais recente?</h3>
+                        <i class="fas fa-chevron-down text-gray-500 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden p-6 bg-gray-50 border-t border-gray-200">
+                        <p class="text-gray-600">Sim, nossa equipe de especialistas tributários mantém a plataforma constantemente atualizada com todas as mudanças na legislação. Utilizamos fontes oficiais e publicamos atualizações assim que são divulgadas, garantindo que você sempre tenha acesso às informações mais recentes e precisas.</p>
+                    </div>
+                </div>
+                
+                <!-- Pergunta 2 -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden hover:border-blue-200 transition">
+                    <button class="faq-question w-full flex justify-between items-center p-6 bg-white hover:bg-gray-50 transition">
+                        <h3 class="text-lg font-medium text-left text-gray-900">Meus dados estão seguros na plataforma?</h3>
+                        <i class="fas fa-chevron-down text-gray-500 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden p-6 bg-gray-50 border-t border-gray-200">
+                        <p class="text-gray-600">Absolutamente. Segurança de dados é nossa prioridade. Utilizamos criptografia de ponta a ponta, certificados SSL e seguimos rigorosamente as normas da LGPD. Seus dados nunca são compartilhados com terceiros e você tem controle total sobre as informações armazenadas em nossa plataforma.</p>
+                    </div>
+                </div>
+                
+                <!-- Pergunta 3 -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden hover:border-blue-200 transition">
+                    <button class="faq-question w-full flex justify-between items-center p-6 bg-white hover:bg-gray-50 transition">
+                        <h3 class="text-lg font-medium text-left text-gray-900">Posso cancelar a qualquer momento?</h3>
+                        <i class="fas fa-chevron-down text-gray-500 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden p-6 bg-gray-50 border-t border-gray-200">
+                        <p class="text-gray-600">Sim, não há fidelidade ou multas por cancelamento. Você pode cancelar seu plano a qualquer momento através da área de configurações da sua conta. Se cancelar no meio de um ciclo pago, terá acesso até o final do período contratado.</p>
+                    </div>
+                </div>
+                
+                <!-- Pergunta 4 -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden hover:border-blue-200 transition">
+                    <button class="faq-question w-full flex justify-between items-center p-6 bg-white hover:bg-gray-50 transition">
+                        <h3 class="text-lg font-medium text-left text-gray-900">A ferramenta serve para empresas do Simples Nacional?</h3>
+                        <i class="fas fa-chevron-down text-gray-500 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden p-6 bg-gray-50 border-t border-gray-200">
+                        <p class="text-gray-600">Sim, a Reforma em Foco foi desenvolvida para atender todos os regimes tributários, incluindo o Simples Nacional. Nossa plataforma oferece análises específicas para cada tipo de empresa, considerando as particularidades do Simples Nacional na transição para o novo sistema.</p>
+                    </div>
+                </div>
+                
+                <!-- Pergunta 5 -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden hover:border-blue-200 transition">
+                    <button class="faq-question w-full flex justify-between items-center p-6 bg-white hover:bg-gray-50 transition">
+                        <h3 class="text-lg font-medium text-left text-gray-900">Como funciona o chat com IA?</h3>
+                        <i class="fas fa-chevron-down text-gray-500 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden p-6 bg-gray-50 border-t border-gray-200">
+                        <p class="text-gray-600">Nosso chat utiliza inteligência artificial treinada especificamente na legislação tributária brasileira. Ele pode responder dúvidas técnicas, explicar conceitos complexos em linguagem simples e até sugerir estratégias baseadas nas características do seu negócio. As respostas são sempre baseadas na legislação atualizada.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <p class="text-gray-600 mb-6">Ainda tem dúvidas? Nossa equipe está pronta para ajudar.</p>
+                <button class="bg-gradient-to-br from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-8 py-3 rounded-lg font-medium transition shadow-md hover:shadow-lg">Fale Conosco</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final Section -->
+    <section class="py-16 bg-gradient-to-br from-blue-600 to-blue-700 text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Pronto para simplificar a Reforma Tributária?</h2>
+            <p class="text-xl mb-8 max-w-3xl mx-auto">Comece agora mesmo e tenha clareza sobre os impactos no seu negócio ou nos seus clientes.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#analisar" class="bg-white hover:bg-gray-100 text-blue-600 px-8 py-4 rounded-lg font-bold transition shadow-lg hover:shadow-xl">Analisar Grátis Agora</a>
+                <a href="#precos" class="bg-transparent hover:bg-blue-800 border-2 border-white px-8 py-4 rounded-lg font-bold transition hover:shadow-lg">Ver Planos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-500 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-calculator text-white text-xl"></i>
+                        </div>
+                        <span class="text-xl font-bold text-white">Reforma em Foco</span>
+                    </div>
+                    <p class="mb-4">Simplificamos a Reforma Tributária para você tomar decisões com confiança.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-linkedin-in text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-facebook-f text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-white font-bold mb-4">Links Rápidos</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#como-funciona" class="hover:text-white transition">Como Funciona</a></li>
+                        <li><a href="#para-quem" class="hover:text-white transition">Para Quem é</a></li>
+                        <li><a href="#ferramentas" class="hover:text-white transition">Ferramentas</a></li>
+                        <li><a href="#precos" class="hover:text-white transition">Preços</a></li>
+                        <li><a href="#faq" class="hover:text-white transition">FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-white font-bold mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white transition">Política de Privacidade</a></li>
+                        <li><a href="#" class="hover:text-white transition">Termos de Uso</a></li>
+                        <li><a href="#" class="hover:text-white transition">Cookies</a></li>
+                        <li><a href="#" class="hover:text-white transition">LGPD</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-white font-bold mb-4">Contato</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-2"></i>
+                            <span>contato@reformaemfoco.com.br</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-2"></i>
+                            <span>(11) 1234-5678</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2"></i>
+                            <span>São Paulo - SP, Brasil</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-clock mt-1 mr-2"></i>
+                            <span>Seg-Sex: 9h às 18h</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8 text-center">
+                <p>© 2024 Reforma em Foco. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // FAQ accordion
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const icon = button.querySelector('i');
+                
+                // Toggle answer visibility
+                answer.classList.toggle('hidden');
+                
+                // Rotate icon
+                if (answer.classList.contains('hidden')) {
+                    icon.classList.remove('rotate-180');
+                } else {
+                    icon.classList.add('rotate-180');
+                }
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+
+        // Tab functionality
+        document.querySelectorAll('.tab-button').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.tab-button').forEach(t => t.classList.remove('active', 'border-blue-500', 'text-blue-600'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('active', 'border-blue-500', 'text-blue-600');
+                
+                // Show corresponding content
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+
+        // Chat functionality
+        document.getElementById('send-message').addEventListener('click', sendMessage);
+        document.getElementById('chat-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (message) {
+                // Add user message
+                addMessageToChat(message, 'user');
+                input.value = '';
+                
+                // Simulate AI response after a delay
+                setTimeout(() => {
+                    const responses = [
+                        "A Reforma Tributária unificará os impostos sobre consumo em dois tributos principais: IBS (Imposto sobre Bens e Serviços) e CBS (Contribuição sobre Bens e Serviços).",
+                        "Para empresas do Simples Nacional, haverá uma transição gradual entre 2026 e 2033, com alíquotas que variam conforme o setor de atividade.",
+                        "O ICMS, ISS, PIS e COFINS serão substituídos pelo IBS e CBS. A alíquota padrão será de 26,5%, mas pode variar conforme o produto ou serviço.",
+                        "A reforma prevê a criação de um crédito tributário para evitar a cumulatividade, beneficiando principalmente as indústrias.",
+                        "Setores como saúde, educação e transporte público terão alíquotas diferenciadas, podendo chegar a zero em alguns casos."
+                    ];
+                    
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    addMessageToChat(randomResponse, 'ai');
+                }, 1000);
+            }
+        }
+
+        function addMessageToChat(message, sender) {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = `max-w-3/4 p-4 text-gray-800 ${sender === 'user' ? 'bg-blue-100 chat-message-user' : 'bg-gray-100 chat-message-ai'}`;
+            messageContent.textContent = message;
+            
+            messageDiv.appendChild(messageContent);
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Simulator functionality
+        document.getElementById('simulate-button').addEventListener('click', function() {
+            const regime = document.getElementById('regime').value;
+            const setor = document.getElementById('setor').value;
+            const faturamento = document.getElementById('faturamento').value;
+            
+            if (!regime || !setor || !faturamento) {
+                alert('Por favor, preencha todos os campos para simular.');
+                return;
+            }
+            
+            // Show loading state
+            const button = this;
+            const originalText = button.textContent;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Simulando...';
+            button.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Hide placeholder, show results
+                document.getElementById('simulator-results').classList.remove('hidden');
+                document.getElementById('simulator-results').innerHTML = `
+                    <h4 class="font-bold text-gray-900 mb-4">Resultado da Simulação</h4>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="result-card bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                            <h5 class="font-medium text-gray-700 mb-2">Sistema Atual</h5>
+                            <p class="text-2xl font-bold text-gray-900 mb-1">R$ ${(parseFloat(faturamento.replace('.','').replace(',','.')) * 0.15).toFixed(2)}</p>
+                            <p class="text-sm text-gray-500">Carga tributária mensal</p>
+                        </div>
+                        
+                        <div class="result-card bg-blue-50 p-4 rounded-lg border border-blue-200 shadow-sm">
+                            <h5 class="font-medium text-blue-700 mb-2">Com a Reforma</h5>
+                            <p class="text-2xl font-bold text-blue-900 mb-1">R$ ${(parseFloat(faturamento.replace('.','').replace(',','.')) * 0.185).toFixed(2)}</p>
+                            <p class="text-sm text-blue-500">Carga tributária mensal</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-${setor === 'comercio' ? 'yellow' : setor === 'industria' ? 'green' : 'blue'}-50 border border-${setor === 'comercio' ? 'yellow' : setor === 'industria' ? 'green' : 'blue'}-200 rounded-lg p-4 mb-4">
+                        <h5 class="font-bold text-${setor === 'comercio' ? 'yellow' : setor === 'industria' ? 'green' : 'blue'}-800 mb-2">Impacto no seu setor (${setor === 'comercio' ? 'Comércio' : setor === 'industria' ? 'Indústria' : 'Serviços'})</h5>
+                        <p class="text-sm text-${setor === 'comercio' ? 'yellow' : setor === 'industria' ? 'green' : 'blue'}-700">
+                            ${setor === 'comercio' ? 'O comércio terá um aumento médio de 3,5% na carga tributária, mas com benefícios para cadeias longas.' : setor === 'industria' ? 'A indústria será uma das mais beneficiadas, com redução real em alguns casos devido aos créditos.' : 'Serviços terão variações conforme a atividade, com alguns aumentos e reduções.'}
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <h5 class="font-bold text-gray-800 mb-2">Recomendações</h5>
+                        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                            <li>Analisar possibilidade de repasse de custos</li>
+                            <li>Revisar precificação dos produtos/serviços</li>
+                            <li>Antecipar planejamento para o período de transição</li>
+                            <li>Consultar um contador para estratégias específicas</li>
+                        </ul>
+                    </div>
+                `;
+                
+                // Reset button
+                button.textContent = originalText;
+                button.disabled = false;
+            }, 1500);
+        });
+
+        // CNPJ Analyzer functionality
+        document.getElementById('analyze-cnpj').addEventListener('click', function() {
+            const cnpj = document.getElementById('cnpj').value;
+            const terms = document.getElementById('terms').checked;
+            
+            if (!cnpj || cnpj.length < 14) {
+                alert('Por favor, insira um CNPJ válido.');
+                return;
+            }
+            
+            if (!terms) {
+                alert('Você precisa aceitar os Termos de Uso para continuar.');
+                return;
+            }
+            
+            // Show loading state
+            document.getElementById('cnpj-placeholder').classList.add('hidden');
+            document.getElementById('cnpj-results').classList.add('hidden');
+            document.getElementById('cnpj-loading').classList.remove('hidden');
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Hide loading, show results
+                document.getElementById('cnpj-loading').classList.add('hidden');
+                document.getElementById('cnpj-results').classList.remove('hidden');
+                
+                // Generate random CNAEs for demo
+                const cnaes = [
+                    { code: '47.81-0-00', description: 'Comércio varejista de alimentos', impact: 'Moderado', details: 'Alíquota estimada: 22,5% (atual: 19,5%)' },
+                    { code: '82.19-0-00', description: 'Serviços de cobrança', impact: 'Baixo', details: 'Alíquota estimada: 25% (atual: 23%)' },
+                    { code: '62.01-5-00', description: 'Desenvolvimento de software', impact: 'Alto', details: 'Alíquota estimada: 18% (atual: 15,5%)' }
+                ];
+                
+                let cnaesHtml = '';
+                cnaes.forEach(cnae => {
+                    cnaesHtml += `
+                        <div class="border-b border-gray-200 pb-4 mb-4 last:border-0 last:mb-0 last:pb-0">
+                            <div class="flex justify-between items-start mb-1">
+                                <div>
+                                    <h5 class="font-medium text-gray-900">${cnae.code} - ${cnae.description}</h5>
+                                    <p class="text-sm text-gray-600">${cnae.details}</p>
+                                </div>
+                                <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                                    cnae.impact === 'Alto' ? 'bg-red-100 text-red-800' : 
+                                    cnae.impact === 'Moderado' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
+                                }">
+                                    Impacto: ${cnae.impact}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('cnpj-results').innerHTML = `
+                    <h4 class="font-bold text-gray-900 mb-4">Empresa: ${cnpj.substring(0, 2)}.${cnpj.substring(2, 5)}.${cnpj.substring(5, 8)}/${cnpj.substring(8, 12)}-${cnpj.substring(12, 14)}</h4>
+                    
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                        <h5 class="font-bold text-blue-800 mb-2">Resumo do Impacto</h5>
+                        <p class="text-sm text-blue-700 mb-2">A empresa terá um <span class="font-medium">aumento médio de 2,8%</span> na carga tributária com a Reforma.</p>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+                            <div class="bg-blue-600 h-2 rounded-full" style="width: 65%"></div>
+                        </div>
+                        <p class="text-xs text-blue-600">65% de compatibilidade com o novo sistema</p>
+                    </div>
+                    
+                    <h5 class="font-medium text-gray-900 mb-3">Análise por CNAE</h5>
+                    ${cnaesHtml}
+                    
+                    <button class="w-full mt-6 bg-gradient-to-br from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-2 rounded-lg font-medium text-sm transition shadow-md hover:shadow-lg">
+                        <i class="fas fa-download mr-2"></i> Baixar Relatório Completo
+                    </button>
+                `;
+            }, 2000);
+        });
+
+        // Hero CNPJ analyzer
+        document.getElementById('hero-cnpj-button').addEventListener('click', function() {
+            const cnpj = document.getElementById('hero-cnpj-input').value;
+            
+            if (!cnpj || cnpj.length < 8) {
+                alert('Por favor, insira um CNPJ válido para análise.');
+                return;
+            }
+            
+            // Scroll to CNPJ analyzer tab
+            document.getElementById('ferramentas').scrollIntoView({ behavior: 'smooth' });
+            
+            // Activate CNPJ tab
+            document.querySelector('[data-tab="cnpj"]').click();
+            
+            // Fill CNPJ field
+            setTimeout(() => {
+                document.getElementById('cnpj').value = cnpj;
+            }, 500);
+        });
+    </script>
+</body>
+</html>
