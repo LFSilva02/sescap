@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="refresh" content="0; url=reforma.html">
+  <title>Carregando…</title>
+  <script>
+    // Fallback de redirecionamento via JS (caso meta não dispare)
+    location.replace('reforma.html');
+  </script>
+</head>
+<body>
+  <p>Redirecionando para <a href="reforma.html">reforma.html</a>…</p>
+</body>
+</html>
